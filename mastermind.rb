@@ -31,6 +31,11 @@ module Gameplay
       "magenta"
     end
   end
+
+  def introduction
+    puts "\nPlease enter your color guesses one at a time."
+    puts "\nYour options are red, orange, yellow, green, blue, and magenta"
+  end
 end
 
 class Game
@@ -40,12 +45,12 @@ class Game
   
   def initialize
     @computer_code = [self.computer_choice, self.computer_choice, self.computer_choice, self.computer_choice]
+    self.introduction
   end
 end
 
 
 game = Game.new
-p game.computer_code 
 
 
 
