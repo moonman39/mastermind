@@ -49,25 +49,41 @@ module Gameplay
       end
     end
   end
+
+  def match_check
+    match_count = 0
+    self.player_guesses.each_with_index do |player_color, index|
+      self.computer_code.each do |computer_color|
+        if player_color == computer_color && index == self.computer_code.index(computer_color)
+          match_count += 1
+        end
+      end
+    end
+    self.code_cracked == true if match_count == 0
+    p match_count
+  end
 end
 
 class Game
   include Gameplay
 
-  attr_accessor :computer_code, :player_guesses
+  attr_accessor :computer_code, :player_guesses, :code_cracked
   attr_reader :valid_colors
   
   def initialize
     @computer_code = [self.computer_choice, self.computer_choice, self.computer_choice, self.computer_choice]
     @valid_colors = ["red", "orange", "yellow", "green", "blue", "magenta"]
     @player_guesses = []
+    @code_cracked = false
     self.new_game
   end
 
   def new_game
     self.introduction
     self.get_player_choices
+    p self.computer_code
     p self.player_guesses
+    self.match_check
   end
 end
 
