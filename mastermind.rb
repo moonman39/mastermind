@@ -36,16 +36,38 @@ module Gameplay
     puts "\nPlease enter your color guesses one at a time."
     puts "\nYour options are red, orange, yellow, green, blue, and magenta"
   end
+
+  def get_player_choices
+    until self.player_guesses.length == 4 do
+      puts "\nGuess a color to crack the code!"
+      color = gets.chomp.downcase
+      if self.valid_colors.include?(color)
+        self.player_guesses.push(color)
+      else
+        puts "\n Please enter a valid color!"
+        self.get_player_choices
+      end
+    end
+  end
 end
 
 class Game
   include Gameplay
 
-  attr_accessor :computer_code
+  attr_accessor :computer_code, :player_guesses
+  attr_reader :valid_colors
   
   def initialize
     @computer_code = [self.computer_choice, self.computer_choice, self.computer_choice, self.computer_choice]
+    @valid_colors = ["red", "orange", "yellow", "green", "blue", "magenta"]
+    @player_guesses = []
+    self.new_game
+  end
+
+  def new_game
     self.introduction
+    self.get_player_choices
+    p self.player_guesses
   end
 end
 
