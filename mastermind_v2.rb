@@ -60,12 +60,26 @@ module Gameplay
       end
     end
   end
+
+  def match_check(guesses, code)
+    self.match_count = 0
+    self.round_array = code.map { |color| color }
+    guesses.each_with_index do |player_color, index|
+      round_array.each do |computer_color|
+        if player_color == computer_color && index == round_array.index(computer_color)
+          self.match_count += 1
+          round_array[round_array.index(computer_color)] = 'match'
+        end
+      end
+    end
+    code_cracked == true if match_count == 4
+  end
 end
 
 class Game
   include Gameplay
 
-  attr_accessor :computer_code, :player_code, :player_guesses
+  attr_accessor :computer_code, :player_code, :player_guesses, :match_count, :round_array, :code_cracked
 
   attr_reader :valid_colors
 
@@ -73,6 +87,7 @@ class Game
     @computer_code = []
     @player_code = []
     @player_guesses = []
+    @code_cracked = false
     @valid_colors = %w(red cyan yellow green blue magenta)
   end
 end
