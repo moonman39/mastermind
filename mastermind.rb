@@ -1,11 +1,11 @@
 # What we need to do!
 # 1. Get random computer choices for the code | DONE!
-# 2. Get user guesses to crack the code
-# 3. Check if user guesses are an exact match OR exist in the code, but don't match
-# 4. Initialize a game
-# 5. Have the game go for 4 rounds
+# 2. Get user guesses to crack the code | DONE!
+# 3. Check if user guesses are an exact match OR exist in the code, but don't match | DONE!
+# 4. Initialize a game | DONE!
+# 5. Have the game go for 12 rounds | DONE!
 # 6. Display the board and update the board to reflect player guesses
-# 7. Check if player cracked the code OR ran out of rounds
+# 7. Check if player cracked the code OR ran out of rounds | DONE!
 
 
 
@@ -14,13 +14,22 @@
 require 'colorize'
 
 module Gameplay
+  def introduction
+    puts "\nPlease enter your color guesses one at a time."
+    puts "\nYour options are red, orange, yellow, green, blue, and magenta"
+  end
+
+  def print_gameboard
+    self.gameboard.each {|array| puts array.join(" ")}
+  end
+
   def computer_choice
     number = (rand * 6).floor
     case number
     when 0
       "red"
     when 1
-      "orange"
+      "cyan"
     when 2
       "yellow"
     when 3
@@ -32,44 +41,12 @@ module Gameplay
     end
   end
 
-  def update_board
-    self.player_guesses.each_with_index do |color, index|
-      case color
-      when "red"
-        self.gameboard[self.rounds_left][index] = "o".red
-      when "cyan"
-        self.gameboard[self.rounds_left][index] = "o".cyan
-      when "yellow"
-        self.gameboard[self.rounds_left][index] = "o".yellow
-      when "green"
-        self.gameboard[self.rounds_left][index] = "o".green
-      when "blue"
-        self.gameboard[self.rounds_left][index] = "o".blue
-      when "magenta"
-        self.gameboard[self.rounds_left][index] = "o".magenta
-      end
-    end
-    self.rounds_left -= 1
-    self.player_guesses = []
-  end
-
-  def introduction
-    puts "\nPlease enter your color guesses one at a time."
-    puts "\nYour options are red, orange, yellow, green, blue, and magenta"
-  end
-
-  def print_gameboard
-    self.gameboard.each {|array| puts array.join(" ")}
-  end
-
-  
-
   def get_player_choices
     until self.player_guesses.length == 4 do
       puts "\nGuess a color to crack the code!"
       color = gets.chomp.downcase
       if self.valid_colors.include?(color)
-        self.player_guesses.push(color)
+        self.player_guesses.push(color) 
       else
         puts "\nPlease enter a valid color!"
         self.get_player_choices
@@ -79,16 +56,17 @@ module Gameplay
 
   def match_check
     self.match_count = 0
-    self.temporary_array = self.computer_code
+    self.temporary_array = self.computer_code.map { |color| color }
+    puts self.computer_code
     self.player_guesses.each_with_index do |player_color, index|
-      self.computer_code.each do |computer_color|
-        if player_color == computer_color && index == self.computer_code.index(computer_color)
+      self.temporary_array.each do |computer_color|
+        if player_color == computer_color && index == self.temporary_array.index(computer_color)
           self.match_count += 1
-          self.temporary_array[self.computer_code.index(computer_color)] = "match"
+          self.temporary_array[self.temporary_array.index(computer_color)] = "match"
         end
       end
     end
-    self.code_cracked == true if match_count == 0
+    self.code_cracked == true if match_count == 4
   end
 
   def instance_check
@@ -110,6 +88,60 @@ module Gameplay
       end
     end
   end
+  
+
+  def update_matches(match_count)
+    case match_count
+    when 1
+      self.gameboard[self.rounds_left].push("*".red)
+    when 2
+      self.gameboard[self.rounds_left].push("*".red, "*".red)
+    when 3
+      self.gameboard[self.rounds_left].push("*".red, "*".red, "*".red)
+    when 4
+      self.gameboard[self.rounds_left].push("*".red, "*".red, "*".red, "*".red)
+    end
+  end
+
+  def update_instances(instance_count)
+    case instance_count
+    when 1
+      self.gameboard[self.rounds_left].push("*")
+    when 2
+      self.gameboard[self.rounds_left].push("*", "*")
+    when 3
+      self.gameboard[self.rounds_left].push("*", "*", "*")
+    when 4
+      self.gameboard[self.rounds_left].push("*", "*", "*", "*")
+    end
+  end
+
+  def update_board(match_count, instance_count)
+    self.player_guesses.each_with_index do |color, index|
+      case color
+      when "red"
+        self.gameboard[self.rounds_left][index] = "o".red
+      when "cyan"
+        self.gameboard[self.rounds_left][index] = "o".cyan
+      when "yellow"
+        self.gameboard[self.rounds_left][index] = "o".yellow
+      when "green"
+        self.gameboard[self.rounds_left][index] = "o".green
+      when "blue"
+        self.gameboard[self.rounds_left][index] = "o".blue
+      when "magenta"
+        self.gameboard[self.rounds_left][index] = "o".magenta
+      end
+    end
+    self.update_matches(match_count)
+    self.update_instances(instance_count)
+  end
+
+  def next_round
+    self.rounds_left -= 1
+    self.player_guesses = []
+    self.temporary_array = []
+  end
 end
 
 class Game
@@ -128,18 +160,18 @@ class Game
     @instance_count = 0
     @match_count = 0
     @gameboard = [
-      ["o", "o", "o", "o", "|", "*", "*", "*", "*"],
-      ["o", "o", "o", "o", "|", "*", "*", "*", "*"],
-      ["o", "o", "o", "o", "|", "*", "*", "*", "*"],
-      ["o", "o", "o", "o", "|", "*", "*", "*", "*"],
-      ["o", "o", "o", "o", "|", "*", "*", "*", "*"],
-      ["o", "o", "o", "o", "|", "*", "*", "*", "*"],
-      ["o", "o", "o", "o", "|", "*", "*", "*", "*"],
-      ["o", "o", "o", "o", "|", "*", "*", "*", "*"],
-      ["o", "o", "o", "o", "|", "*", "*", "*", "*"],
-      ["o", "o", "o", "o", "|", "*", "*", "*", "*"],
-      ["o", "o", "o", "o", "|", "*", "*", "*", "*"],
-      ["o", "o", "o", "o", "|", "*", "*", "*", "*"],
+      ["o", "o", "o", "o", "|"],
+      ["o", "o", "o", "o", "|"],
+      ["o", "o", "o", "o", "|"],
+      ["o", "o", "o", "o", "|"],
+      ["o", "o", "o", "o", "|"],
+      ["o", "o", "o", "o", "|"],
+      ["o", "o", "o", "o", "|"],
+      ["o", "o", "o", "o", "|"],
+      ["o", "o", "o", "o", "|"],
+      ["o", "o", "o", "o", "|"],
+      ["o", "o", "o", "o", "|"],
+      ["o", "o", "o", "o", "|"],
     ]
     self.new_game
   end
@@ -151,9 +183,11 @@ class Game
       self.get_player_choices
       self.match_check
       self.instance_check
-      self.update_board
+      self.update_board(self.match_count, self.instance_count)
+      self.next_round
       self.print_gameboard
     end
+    p self.computer_code
   end
 end
 
