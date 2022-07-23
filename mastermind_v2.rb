@@ -47,18 +47,32 @@ module Gameplay
       end
     end
   end
+
+  def player_guesses_input
+    until player_guesses.length == 4
+      puts "\nGuess a color to crack the code!"
+      color = gets.chomp.downcase
+      if valid_colors.include?(color)
+        player_guesses.push(color)
+      else
+        puts "\nPlease enter a valid color!"
+        get_player_choices
+      end
+    end
+  end
 end
 
 class Game
   include Gameplay
 
-  attr_accessor :computer_code, :player_code
+  attr_accessor :computer_code, :player_code, :player_guesses
 
   attr_reader :valid_colors
 
   def initialize
     @computer_code = []
     @player_code = []
+    @player_guesses = []
     @valid_colors = %w(red cyan yellow green blue magenta)
   end
 end
