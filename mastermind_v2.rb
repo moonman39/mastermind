@@ -78,6 +78,7 @@ module Gameplay
     end
     code_cracked == true if match_count == 4
     match_count
+    p round_array
   end
 
   def instance_check(guesses)
@@ -98,6 +99,7 @@ module Gameplay
         end
       end
     end
+    p round_array
     instance_count
   end
 end
@@ -118,6 +120,19 @@ module Gameboard
         gameboard[rounds_left].push('*'.red, '*'.red, '*'.red)
       when 4
         gameboard[rounds_left].push('*'.red, '*'.red, '*'.red, '*'.red)
+    end
+  end
+
+  def update_instances(instance_count)
+    case instance_count
+      when 1
+        gameboard[rounds_left].push('*')
+      when 2
+        gameboard[rounds_left].push('*', '*')
+      when 3
+        gameboard[rounds_left].push('*', '*', '*')
+      when 4
+        gameboard[rounds_left].push('*', '*', '*', '*')
     end
   end
 end
@@ -158,12 +173,12 @@ game = Game.new
 game.computer_code_input
 game.print_gameboard
 game.player_guesses_input
-p game.match_check(game.player_guesses, game.computer_code)
-p game.instance_check(game.player_guesses)
-p game.computer_code
-p game.match_count
+game.match_check(game.player_guesses, game.computer_code)
+game.instance_check(game.player_guesses)
 game.update_matches(game.match_count)
+game.update_instances(game.instance_count)
 game.print_gameboard
+
 
 
 
