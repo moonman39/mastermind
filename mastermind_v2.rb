@@ -135,6 +135,25 @@ module Gameboard
         gameboard[rounds_left].push('*', '*', '*', '*')
     end
   end
+
+  def update_board(guesses)
+    guesses.each_with_index do |color, index|
+      case color
+        when 'red'
+          gameboard[rounds_left][index] = 'o'.red
+        when 'cyan'
+          gameboard[rounds_left][index] = 'o'.cyan
+        when 'yellow'
+          gameboard[rounds_left][index] = 'o'.yellow
+        when 'green'
+          gameboard[rounds_left][index] = 'o'.green
+        when 'blue'
+          gameboard[rounds_left][index] = 'o'.blue
+        when 'magenta'
+          gameboard[rounds_left][index] = 'o'.magenta
+        end
+    end
+  end
 end
 
 class Game
@@ -177,6 +196,7 @@ game.match_check(game.player_guesses, game.computer_code)
 game.instance_check(game.player_guesses)
 game.update_matches(game.match_count)
 game.update_instances(game.instance_count)
+game.update_board(game.player_guesses)
 game.print_gameboard
 
 

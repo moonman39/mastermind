@@ -150,19 +150,19 @@ module Gameplay
   def update_board(match_count, instance_count)
     player_guesses.each_with_index do |color, index|
       case color
-      when 'red'
-        gameboard[rounds_left][index] = 'o'.red
-      when 'cyan'
-        gameboard[rounds_left][index] = 'o'.cyan
-      when 'yellow'
-        gameboard[rounds_left][index] = 'o'.yellow
-      when 'green'
-        gameboard[rounds_left][index] = 'o'.green
-      when 'blue'
-        gameboard[rounds_left][index] = 'o'.blue
-      when 'magenta'
-        gameboard[rounds_left][index] = 'o'.magenta
-      end
+        when 'red'
+          gameboard[rounds_left][index] = 'o'.red
+        when 'cyan'
+          gameboard[rounds_left][index] = 'o'.cyan
+        when 'yellow'
+          gameboard[rounds_left][index] = 'o'.yellow
+        when 'green'
+          gameboard[rounds_left][index] = 'o'.green
+        when 'blue'
+          gameboard[rounds_left][index] = 'o'.blue
+        when 'magenta'
+          gameboard[rounds_left][index] = 'o'.magenta
+        end
     end
     update_matches(match_count)
     update_instances(instance_count)
